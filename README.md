@@ -1,5 +1,5 @@
 
-##Machine Learning Learning Exercises
+## Machine Learning Learning Exercises
 
 This repository documents a series of machine learning experiments conducted as part of a structured, hands-on learning process. Each submodule focuses on the "why" behind the "how," covering data preprocessing, model behavior, and identifying common pitfalls like data leakage and target imbalance.
 
