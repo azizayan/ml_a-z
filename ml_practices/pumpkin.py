@@ -1,21 +1,23 @@
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
+from datetime import datetime
 
 
 dataset = pd.read_csv("ml_practices/US-pumpkins.csv")
 dataset = dataset[dataset['Package'].str.contains('bushel',case=True, regex=True)]
 print(dataset.head())
 print(dataset.isnull().sum())
+day_of_year = pd.to_datetime(dataset['Date']).apply(lambda dt: (dt-datetime(dt.year,1,1)).days)
 
-columns_to_select = ['Package', 'Low Price','High Price', 'Date','Origin']
+columns_to_select = ['Package', 'Low Price','High Price', 'Date','Origin','Variety']
 
 dataset = dataset.loc[:, columns_to_select]
 
 avg_price = (dataset['Low Price'] + dataset['High Price']) / 2
 month = pd.DatetimeIndex(dataset['Date']).month
 
-new_dataset = pd.DataFrame({'Month':month, 'Package':dataset['Package'],'Origin':dataset['Origin'], 'Price': avg_price })
+new_dataset = pd.DataFrame({'Month':month, 'Package':dataset['Package'],'Origin':dataset['Origin'], 'Price': avg_price,'Day':day_of_year,'Variety':dataset['Variety'] })
 
 
 print(new_dataset)
@@ -105,3 +107,17 @@ results = test_samples.copy()
 results["Predicted Price"] = predictions
 
 print(results)
+
+
+
+ax = None
+colors = ['red','blue','green','yellow']
+
+for i, var in enumerate(new_dataset['Variety'].unique()):
+    df = new_dataset[new_dataset['Variety'] == var]
+    ax = df.plot.scatter('Day', 'Price', ax=ax,
+                         c=colors[i % len(colors)],
+                         label=var)
+
+plt.show()
+
